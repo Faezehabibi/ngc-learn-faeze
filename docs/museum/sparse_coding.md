@@ -20,6 +20,7 @@ to the folder `data/` to work through this exhibit.
 
 ## On Dictionary Learning
 
+<div>
 Dictionary learning poses a very interesting question for statistical learning:
 can we extract "feature detectors" from a given database (or collection of patterns)
 such that only a few of these detectors play a role in reconstructing any given,
@@ -34,7 +35,7 @@ input patterns with as few of these atoms as possible. Typical sparse dictionary
 or coding models work with an over-complete spanning set, or, in other words,
 a latent dimensionality (which one could think of as the number of neurons
 in a single latent state node of an ngc-learn system) that is greater than the
-dimensionality of the input itself.
+dimensionality of the input itself. </div>
 
 From a neurobiological standpoint, sparse coding emulates a fundamental property
 of neural populations -- the activities among a neural population are sparse where,
