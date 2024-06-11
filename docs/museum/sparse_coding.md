@@ -157,7 +157,7 @@ as well as the necessary task-specific functions needed to reproduce the
 correct experimental setup (these get compiled in the constructor's 
 `dynamic()` method. For both the Cauchy prior model of <b>[1]</b> 
 and the iterative thresholding model of <b>[2]</b>, we track, in the 
-training script `train_patch_sc.py`, various dictionary synaptic  
+training script `train_patch_sc.py`, various dictionary synaptic 
 statistics and a measurement of the model reconstruction loss. The 
 reconstruction loss is a key part of the objective that both models 
 optimize, i.e., both SC models effectively optimize an 
