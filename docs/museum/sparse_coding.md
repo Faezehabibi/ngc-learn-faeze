@@ -20,7 +20,7 @@ to the folder `data/` to work through this exhibit.
 
 ## On Dictionary Learning
 
-<div>
+<div style="text-align: justify;">
 Dictionary learning poses a very interesting question for statistical learning:
 can we extract "feature detectors" from a given database (or collection of patterns)
 such that only a few of these detectors play a role in reconstructing any given,
