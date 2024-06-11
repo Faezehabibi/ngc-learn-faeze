@@ -134,7 +134,7 @@ class RateCell(JaxComponent): ## Rate-coded/real-valued cell
 
         integration_type: type of integration to use for this cell's dynamics;
             current supported forms include "euler" (Euler/RK-1 integration)
-            and "midpoint" or "rk2" (midpoint method/RK-2 integration) (Default: "euler")
+            and "midpoint" or "rk2" (midpoint method/RK-2 integration), "rk4" (RK-4 integration) (Default: "euler")
 
             :Note: setting the integration type to the midpoint method will
                 increase the accuray of the estimate of the cell's evolution
