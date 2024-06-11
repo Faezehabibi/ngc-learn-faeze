@@ -15,8 +15,8 @@ The model code for this
 exhibit can be found
 [here](https://github.com/NACLab/ngc-museum/tree/main/exhibits/olshausen_sc).
 
-Note: You will need to unzip the data arrays in `exhibits/data/natural_scenes.zip` 
-to the folder `exhibits/data/` to work through this exhibit.
+Note: You will need to unzip the data arrays in `data/natural_scenes.zip` 
+to the folder `data/` to work through this exhibit.
 
 ## On Dictionary Learning
 
@@ -169,11 +169,11 @@ input and the sparsity of its single latent state layer `z1`).
 We will now simulate the learning of feature detectors using the two
 sparse coding models specified above. The code provided in
 `train_patch_sc.py`  will execute a simulation of the above
-two models on the natural images found in `exhibits/data/natural_scenes.zip`),
+two models on the natural images found in `data/natural_scenes.zip`),
 which is a dataset composed of several images of the American Northwest.
 
 First, navigate to the `exhibits/` directory to access the example/demonstration
-code and further enter the `exhibits/data/` sub-folder. Unzip the file
+code and further enter the `../data/` sub-folder. Unzip the file
 `natural_scenes.zip` to create one more sub-folder that contains two numpy arrays,
 the first labeled `natural_scenes/raw_dataX.npy` and another labeled as
 `natural_scenes/dataX.npy`. The first one contains the original, `512 x 512` raw pixel
