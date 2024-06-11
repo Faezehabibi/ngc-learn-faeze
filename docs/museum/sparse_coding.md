@@ -1,22 +1,26 @@
 # Sparse Coding and Iterative Thresholding
 
+<p align="justify">
 In this exhibit, we create, simulate, and visualize the
 internally acquired filters/atoms of variants of a sparse coding system based
 on the classical model proposed by (Olshausen &amp; Field, 1996) [1].
-After going through this demonstration, you will:
+After going through this demonstration, you will: </p>
 
+<p align="justify">
 1.  Learn how to build a 2-layer sparse coding model of natural image patterns,
-using the original dataset used in [1].
+using the original dataset used in [1]. </p>
+<p align="justify">
 2.  Visualize the acquired filters of the learned dictionary models and examine
 the results of imposing a kurtotic prior as well as a thresholding function
-over latent codes.
+over latent codes. </p>
 
 The model code for this
 exhibit can be found
 [here](https://github.com/NACLab/ngc-museum/tree/main/exhibits/olshausen_sc).
 
+<p align="justify">
 Note: You will need to unzip the data arrays in `data/natural_scenes.zip` 
-to the folder `data/` to work through this exhibit.
+to the folder `data/` to work through this exhibit. </p>
 
 ## On Dictionary Learning
 
@@ -37,6 +41,7 @@ a latent dimensionality (which one could think of as the number of neurons
 in a single latent state node of an ngc-learn system) that is greater than the
 dimensionality of the input itself. </p>
 
+<p align="justify">
 From a neurobiological standpoint, sparse coding emulates a fundamental property
 of neural populations -- the activities among a neural population are sparse where,
 within a period of time, the number of total active neurons (those that are firing)
@@ -46,14 +51,15 @@ neurons activate to represent different inputs (one way to view this is that the
 "fight" or compete for the right to activate in response to different stimuli).
 Classically, it was shown in <b>[1]</b> that a sparse coding model trained on natural
 image patches learned within its dictionary non-orthogonal filters that resembled
-receptive fields of simple-cells (found in the visual cortex).
+receptive fields of simple-cells (found in the visual cortex). </p>
 
 ## Constructing a Sparse Coding System
 
-To build a sparse coding model, we can manually craft a model using ngc-learn's 
-nodes-and-cables system. First, we specify the underlying generative model we 
-aim to emulate. Formally, we seek to optimize a set of latent codes according 
-to the following differential equation:
+<p align="justify">
+To build a sparse coding model, we can manually craft a model using ngc-learn's
+nodes-and-cables system. First, we specify the underlying generative model we
+aim to emulate. Formally, we seek to optimize a set of latent codes according
+to the following differential equation: </p>
 
 $$
 \tau_m \frac{\partial \mathbf{z}_t}{\partial t} = 
@@ -67,16 +73,18 @@ $$
 \mathbf{e}(t) = -\big(\mathbf{o}_t - (\mathbf{W} \cdot \mathbf{z}(t)) \big)
 $$
 
+<p align="justify">
 where we see that we aim to learn a two-layer generative system that specifically
-imposes a prior distribution `p(z)` over the latent feature detectors (via the 
+imposes a prior distribution `p(z)` over the latent feature detectors (via the
 constraint function $\Omega\big(\mathbf{z}(t)\big)$) that we hope
 to extract in node `z`. Note that this two-layer model (or single latent-variable layer
 model) could either be the linear generative model from <b>[1]</b> or one similar to the
-model learned through ISTA <b>[2]</b> if a (soft) thresholding function is used instead.
+model learned through ISTA <b>[2]</b> if a (soft) thresholding function is used instead. </p>
 
-Constructing the above system for (Olshausen &amp; Field, 1996) is done, much 
-like we do in the `SparseCoding` agent constructor in the model museum exhibit 
-code, as follows:
+<p align="justify">
+Constructing the above system for (Olshausen &amp; Field, 1996) is done, much
+like we do in the `SparseCoding` agent constructor in the model museum exhibit
+code, as follows: </p>
 
 ```python
 from ngcsimlib.context import Context
@@ -116,6 +124,7 @@ with Context("Circuit") as circuit:
     evolve_cmd, evolve_args = circuit.compile_by_key(W1, compile_key="evolve")
 ```
 
+<p align="justify">
 Notice that, in our model `circuit`, we have taken care to set the `.param_axis`
 variable to be equal to `1` -- this will, whenever we call `apply_constraints()`,
 tell the NGC system to normalize the Euclidean norm of the columns
@@ -126,7 +135,7 @@ the magnitude of the dictionary synapses to solve the underlying constrained
 optimization problem (and, in general, constraining the rows or
 columns of generative models helps to facilitate a more stable training process).
 This norm constraint is configured in the agent constructor's dynamic 
-compile function, specifically in the snippet below:
+compile function, specifically in the snippet below: </p>
 
 ```python
 @Context.dynamicCommand
@@ -151,6 +160,7 @@ with Context("Circuit") as circuit:
     ## ...rest of the code is the same as the Cauchy prior model...
 ```
 
+<p align="justify">
 Note that the above two models are built and configured for you in the 
 Model Museum, in the `museum/exhibits/olshausen_sc/sparse_coding.py` 
 agent constructor, which internally implements the model contexts depicted above 
@@ -163,16 +173,18 @@ statistics and a measurement of the model reconstruction loss. The
 reconstruction loss is a key part of the objective that both models 
 optimize, i.e., both SC models effectively optimize an 
 energy function that is a sum of its reconstruction error of its sensory 
-input and the sparsity of its single latent state layer `z1`).
+input and the sparsity of its single latent state layer `z1`). </p>
 
 ## Learning Latent Feature Detectors
 
+<p align="justify">
 We will now simulate the learning of feature detectors using the two
 sparse coding models specified above. The code provided in
 `train_patch_sc.py`  will execute a simulation of the above
 two models on the natural images found in `data/natural_scenes.zip`),
-which is a dataset composed of several images of the American Northwest.
+which is a dataset composed of several images of the American Northwest. </p>
 
+<p align="justify">
 First, navigate to the `exhibits/` directory to access the example/demonstration
 code and further enter the `../data/` sub-folder. Unzip the file
 `natural_scenes.zip` to create one more sub-folder that contains two numpy arrays,
@@ -181,14 +193,15 @@ the first labeled `natural_scenes/raw_dataX.npy` and another labeled as
 image arrays (flattened) while the second contains the pre-processed, whitened/normalized
 (and flattened) image data arrays (these are the pre-processed image patterns used
 in <b>[1]</b>). You will, in this demonstration, only be working with `natural_scenes/dataX.npy`.
-Two (raw) images sampled from the original dataset (`raw_dataX.npy`) are shown below:
+Two (raw) images sampled from the original dataset (`raw_dataX.npy`) are shown below: </p>
 
 |   |   |
 |---|---|
 | ![](../images/museum/data_img1.png)  |  ![](../images/museum/data_img2.png) |
 
-With the data unpacked and ready, we can now run the training process in 
-the model exhibit by either executing its Python simulation script like so:
+<p align="justify">
+With the data unpacked and ready, we can now run the training process in
+the model exhibit by either executing its Python simulation script like so: </p>
 
 ```console
 $ python train_patch_sc.py --dataX="$DATA_DIR/dataX.npy" \
@@ -214,12 +227,14 @@ $ python train_patch_sc.py --dataX="$DATA_DIR/dataX.npy" \
                            --n_iter=200 --model_type="sc_ista"
 ```
 
+<p align="justify">
 you will now train your sparse coding using a latent soft-thresholding function
 (emulating ISTA). After this simulated training process ends, you should see 
-in your `exp/filters/` sub-directory a filter plot like the one below:
+in your `exp/filters/` sub-directory a filter plot like the one below: </p>
 
 <img src="../images/museum/sc_ista_filters.jpg" width="450" />
 
+<p align="justify">
 The filter plots, notably, visually indicate that the dictionary atoms in both
 sparse coding systems learned to function as edge detectors, each tuned to
 a particular position, orientation, and frequency. These learned feature detectors,
@@ -232,7 +247,7 @@ for the model that used the thresholding function will ultimately sparser
 Furthermore, the filters for the model with thresholding appear to smoother
 and with fewer occurrences of less-than-useful slots than the Cauchy model
 (or filters that did not appear to extract any particularly interpretable
-features).
+features). </p>
 
 <!--
 This difference in sparsity can be verified by examining the difference/gap
@@ -253,10 +268,11 @@ the sparsest.
 
 ### Computing Hardware Note:
 
+<p align="justify">
 This tutorial was tested and run on an `Ubuntu 22.04.2 LTS` operating system 
 using an `NVIDIA GeForce RTX 2070` GPU with `CUDA Version: 12.1` 
 (`Driver Version: 530.41.03`). Note that the times reported in any tutorial 
-screenshot/console snippets were produced on this system.
+screenshot/console snippets were produced on this system. </p>
 
 ## References
 <b>[1]</b> Olshausen, B., Field, D. Emergence of simple-cell receptive field properties
