@@ -159,9 +159,9 @@ def dfy(t, y, params):  ## dynamics differential equations y'(t)
     return dy_dt
 
 dt = 0.5 ## integration constant
-T = 8 ## num integration (time) steps to simulate
-y0 = 1. ## initial conditions for ODE dy/dt
-t = 0. ## initial time
+T = 8    ## num integration (time) steps to simulate
+y0 = 1.  ## initial conditions for ODE dy/dt
+t = 0.   ## initial time
 
 ## simulate and collect data from the parallel integration processes
 t_values = [t]
