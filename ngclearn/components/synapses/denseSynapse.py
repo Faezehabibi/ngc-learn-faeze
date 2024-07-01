@@ -3,36 +3,16 @@ from ngclearn import resolver, Component, Compartment
 from ngclearn.components.jaxComponent import JaxComponent
 from ngclearn.utils import tensorstats
 from ngclearn.utils.weight_distribution import initialize_params
+from ngcsimlib.logger import info
 
-@jit
-def compute_layer(inp, weight, biases=0., Rscale=1.):
-    """
-    Applies the transformation/projection induced by the synaptic efficacie
-    associated with this synaptic cable
-
-    Args:
-        inp: signal input to run through this synaptic cable
-
-        weight: this cable's synaptic value matrix
-
-        biases: this cable's bias value vector (default: 0.)
-
-        Rscale: scale factor to apply to synapses before transform applied
-            to input values (default: 1.)
-
-    Returns:
-        a projection/transformation of input "inp"
-    """
-    return jnp.matmul(inp, weight * Rscale) + biases
-
-class DenseSynapse(JaxComponent): ## static non-learnable synaptic cable
+class DenseSynapse(JaxComponent): ## base dense synaptic cable
     """
     A dense synaptic cable; no form of synaptic evolution/adaptation
     is in-built to this component.
 
     | --- Synapse Compartments: ---
     | inputs - input (takes in external signals)
-    | outputs - output
+    | outputs - output signals
     | weights - current value matrix of synaptic efficacies
     | biases - current value vector of synaptic bias values
 
@@ -50,7 +30,7 @@ class DenseSynapse(JaxComponent): ## static non-learnable synaptic cable
             (Default: None, which turns off/disables biases)
 
         resist_scale: a fixed (resistance) scaling factor to apply to synaptic
-            transform (Default: 1.), i.e., yields: out = ((W * Rscale) * in)
+            transform (Default: 1.), i.e., yields: out = ((W * in) * resist_scale) + bias
 
         p_conn: probability of a connection existing (default: 1.); setting
             this to < 1 and > 0. will result in a sparser synaptic structure
@@ -58,39 +38,68 @@ class DenseSynapse(JaxComponent): ## static non-learnable synaptic cable
     """
 
     # Define Functions
-    def __init__(self, name, shape, weight_init=None, bias_init=None,
-                 resist_scale=1., p_conn=1., **kwargs):
+    def __init__(self, name, shape, model_shape=(1,1), weight_forward=True, weight_init=None, bias_init=None,
+                 resist_scale=1., p_conn=1., batch_size=1, **kwargs):
         super().__init__(name, **kwargs)
 
+        self.batch_size = batch_size
         self.weight_init = weight_init
         self.bias_init = bias_init
+        self.model_shape = model_shape
+        self.n_models = model_shape[0]                 # = ni = #of parents = n3
+        self.model_patches = model_shape[1]              # = ci = #of children per parent = c3
+        self.weight_forward = weight_forward
 
         ## Synapse meta-parameters
-        self.shape = shape ## shape of synaptic efficacy matrix
+        self.sub_shape = shape[0], shape[1]*self.model_patches  ## shape of synaptic efficacy matrix           # = (in_dim, hid_dim) = (d3, d2)
         self.Rscale = resist_scale ## post-transformation scale factor
+        self.shape = (self.sub_shape[0] * self.n_models, self.sub_shape[1] * self.n_models)
+
+        if self.weight_forward == False:
+            self.sub_shape = (self.sub_shape[1], self.sub_shape[0])
+            self.shape = (self.shape[1], self.shape[0])
 
         ## Set up synaptic weight values
         tmp_key, *subkeys = random.split(self.key.value, 4)
-        weights = initialize_params(subkeys[0], weight_init, shape)
+        if self.weight_init is None:
+            info(self.name, "is using default weight initializer!")
+            self.weight_init = {"dist": "uniform", "amin": 0.025, "amax": 0.8}
+
+
+        if self.n_models>1 or self.model_patches>1:
+            weights = initialize_params(subkeys[0], {"dist": "constant", "value": 0.}, self.shape, use_numpy=True)
+            for i in range(self.n_models):
+                weights[self.sub_shape[0] * i:
+                        self.sub_shape[0] * (i + 1),
+                        self.sub_shape[1] * i:
+                        self.sub_shape[1] * (i + 1)] = initialize_params(subkeys[0],
+                                                                 init_kernel=self.weight_init,
+                                                                 shape=self.sub_shape,
+                                                                 use_numpy=True)
+        else:
+            weights = initialize_params(subkeys[0], self.weight_init, self.shape)
         if 0. < p_conn < 1.: ## only non-zero and <1 probs allowed
-            mask = random.bernoulli(subkeys[1], p=p_conn, shape=shape)
+            mask = random.bernoulli(subkeys[1], p=p_conn, shape=self.shape)
             weights = weights * mask ## sparsify matrix
 
         self.batch_size = 1
         ## Compartment setup
-        preVals = jnp.zeros((self.batch_size, shape[0]))
-        postVals = jnp.zeros((self.batch_size, shape[1]))
+        preVals = jnp.zeros((self.batch_size, self.shape[0]))
+        postVals = jnp.zeros((self.batch_size, self.shape[1]))
         self.inputs = Compartment(preVals)
         self.outputs = Compartment(postVals)
         self.weights = Compartment(weights)
         ## Set up (optional) bias values
+        if self.bias_init is None:
+            info(self.name, "is using default bias value of zero (no bias "
+                            "kernel provided)!")
         self.biases = Compartment(initialize_params(subkeys[2], bias_init,
-                                                    (1, shape[1]))
+                                                    (1, self.shape[1]))
                                   if bias_init else 0.0)
 
     @staticmethod
-    def _advance_state(t, dt, Rscale, inputs, weights, biases):
-        outputs = compute_layer(inputs, weights, biases, Rscale)
+    def _advance_state(Rscale, inputs, weights, biases):
+        outputs = (jnp.matmul(inputs, weights) * Rscale) + biases
         return outputs
 
     @resolver(_advance_state)
@@ -124,6 +133,37 @@ class DenseSynapse(JaxComponent): ## static non-learnable synaptic cable
         self.weights.set(data['weights'])
         if "biases" in data.keys():
             self.biases.set(data['biases'])
+
+    @classmethod
+    def help(cls): ## component help function
+        properties = {
+            "synapse_type": "DenseSynapse - performs a synaptic transformation "
+                            "of inputs to produce  output signals (e.g., a "
+                            "scaled linear multivariate transformation)"
+        }
+        compartment_props = {
+            "inputs":
+                {"inputs": "Takes in external input signal values"},
+            "states":
+                {"weights": "Synapse efficacy/strength parameter values",
+                 "biases": "Base-rate/bias parameter values",
+                 "key": "JAX PRNG key"},
+            "outputs":
+                {"outputs": "Output of synaptic transformation"},
+        }
+        hyperparams = {
+            "shape": "Shape of synaptic weight value matrix; number inputs x number outputs",
+            "batch_size": "Batch size dimension of this component",
+            "weight_init": "Initialization conditions for synaptic weight (W) values",
+            "bias_init": "Initialization conditions for bias/base-rate (b) values",
+            "resist_scale": "Resistance level scaling factor (Rscale); applied to output of transformation",
+            "p_conn": "Probability of a connection existing (otherwise, it is masked to zero)"
+        }
+        info = {cls.__name__: properties,
+                "compartments": compartment_props,
+                "dynamics": "outputs = [W * inputs] * Rscale + b",
+                "hyperparameters": hyperparams}
+        return info
 
     def __repr__(self):
         comps = [varname for varname in dir(self) if Compartment.is_compartment(getattr(self, varname))]
