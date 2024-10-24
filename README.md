@@ -54,10 +54,10 @@ Many of the tutorials will require Matplotlib (>=3.8.0), imageio (>=2.31.5), and
 
 ### User Installation
 
-<i>Setup</i>: The easiest way to install ngc-learn is through <code>pip</code>:
-<pre>
-$ pip install ngclearn
-</pre>
+<i>Setup</i>: The easiest way to install ngc-learn is through `pip`:
+```bash
+pip install ngclearn
+```
 
 Note that installing the official pip package without any form of JAX installed
 on your system will default to downloading the CPU version of ngc-learn; make
