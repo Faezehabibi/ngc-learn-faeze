@@ -69,17 +69,10 @@ Library of Candidate Functions: $\Theta(\mathbf{X}) = [\mathbf{1} \quad \mathbf{
 
 
 
-SINDy describes the derivative (linear operation acting on △t) as linear transformations
+[comment]: <> SINDy describes the derivative (linear operation acting on △t) as linear transformations
 of a manually constructed dictionary from the state vector by a coefficient matrix.
 Dictionary learning combined with LASSO (L1-norm) promotes the sparsity of the coefficient matrix
 which allows only governing terms in the dictionary stay non-zero.
-
-
-
-## References
-<b>[1]</b> Brunton SL, Proctor JL, Kutz JN. Discovering governing equations from data by sparse identification of nonlinear dynamical systems. Proc Natl Acad Sci U S A. 2016 Apr 12;113(15):3932-7. doi: 10.1073/pnas.1517384113. Epub 2016 Mar 28. PMID: 27035946; PMCID: PMC4839439.
-
-@article{de Silva2020, doi = {10.21105/joss.02104}, url = {https://doi.org/10.21105/joss.02104}, year = {2020}, publisher = {The Open Journal}, volume = {5}, number = {49}, pages = {2104}, author = {Brian M. de Silva and Kathleen Champion and Markus Quade and Jean-Christophe Loiseau and J. Nathan Kutz and Steven L. Brunton}, title = {PySINDy: A Python package for the sparse identification of nonlinear dynamical systems from data}, journal = {Journal of Open Source Software} }
 
 
 
