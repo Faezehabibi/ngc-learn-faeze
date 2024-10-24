@@ -69,7 +69,7 @@ The documentation includes more detailed
 Note that this library was developed on Ubuntu 20.04 and tested on Ubuntu(s) 18.04 and 20.04.
 
 If the installation was successful, you should see the following if you test
-it against your Python interpreter, i.e., run the <code>$ python</code> command
+it against your Python interpreter, i.e., run the ` python` command
 and complete the following sequence of steps as depicted in the screenshot below
 (you should see at the bottom of your output something akin to the
 right major and minor version of ngc-learn):
@@ -86,7 +86,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 which we no longer support), please visit the repo for
 <a href="https://github.com/NACLab/ngc-learn-legacy"><i>ngc-learn-legacy</i></a>.
 
-## <b>Attribution:</b>
+## Attribution:
 
 If you use this code in any form in your project(s), please cite its source
 paper (as well as ngc-learn's official software citation):
@@ -115,15 +115,15 @@ make a contribution to ngc-learn, please see our
 
 <b>Source Code</b>
 You can check/pull the latest source code for this library via:
-<pre>
-$ git clone https://github.com/NACLab/ngc-learn.git
-</pre>
+```bash
+git clone https://github.com/NACLab/ngc-learn.git
+```
 
 If you are working on and developing with ngc-learn pulled from the github
 repo, then run the following command to set up an editable install:
-<pre>
-$ python install -e .
-</pre>
+```bash
+python install -e .
+```
 
 **Version:**<br>
 1.2.3-Beta <!-- -Alpha -->
