@@ -6,7 +6,7 @@ In this section, we teach, create, simulate, and visualize SINDy model implement
 2.  Learn how to build polynomial libraries of given dataset with arbitrary order.
 3.  Learn how to solve the sparse regression problem by iteratively performing the least squares (LSQ) method followed by thresholding-- Sequential Thresholding Least Square (STLSQ)-- for the given model.
 
-The model **code** for this exhibit can be found [here](https://github.com/NACLab/ngc-museum/exhibits/sindy/sindy.py).
+The model **code** for this exhibit can be found [here](https://github.com/NACLab/ngc-museum/exhibits/sindy/sindy.py). Original package [2]
 
 
 ## SINDy 
@@ -79,4 +79,13 @@ which allows only governing terms in the dictionary stay non-zero.
 ## References
 <b>[1]</b> Brunton SL, Proctor JL, Kutz JN. Discovering governing equations from data by sparse identification of nonlinear dynamical systems. Proc Natl Acad Sci U S A. 2016 Apr 12;113(15):3932-7. doi: 10.1073/pnas.1517384113. Epub 2016 Mar 28. PMID: 27035946; PMCID: PMC4839439.
 
+@article{de Silva2020, doi = {10.21105/joss.02104}, url = {https://doi.org/10.21105/joss.02104}, year = {2020}, publisher = {The Open Journal}, volume = {5}, number = {49}, pages = {2104}, author = {Brian M. de Silva and Kathleen Champion and Markus Quade and Jean-Christophe Loiseau and J. Nathan Kutz and Steven L. Brunton}, title = {PySINDy: A Python package for the sparse identification of nonlinear dynamical systems from data}, journal = {Journal of Open Source Software} }
+
+
+
+## References
+
+[1] Brunton SL, Proctor JL, Kutz JN. Discovering governing equations from data by sparse identification of nonlinear dynamical systems. Proc Natl Acad Sci U S A. 2016 Apr 12;113(15):3932-7. doi: [10.1073/pnas.1517384113](https://doi.org/10.1073/pnas.1517384113)
+
+[2] de Silva BM, Champion K, Quade M, Loiseau JC, Kutz JN, Brunton SL. PySINDy: A Python package for the sparse identification of nonlinear dynamical systems from data. Journal of Open Source Software. 2020;5(49):2104. doi: [10.21105/joss.02104](https://doi.org/10.21105/joss.02104)
 
