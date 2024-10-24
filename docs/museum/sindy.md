@@ -64,15 +64,16 @@ Library of Candidate Functions: $\Theta(\mathbf{X}) = [\mathbf{1} \quad \mathbf{
   <img src="../images/museum/sindy/linear_3D.png" width="300">
 </p>
 
+[
 
 
+operation]: #
 
-
-
-[comment]: <> (SINDy describes the derivative (linear operation acting on △t) as linear transformations
+<!-- (SINDy describes the derivative (linear operation acting on △t) as linear transformations
 of a manually constructed dictionary from the state vector by a coefficient matrix.
 Dictionary learning combined with LASSO (L1-norm) promotes the sparsity of the coefficient matrix
-which allows only governing terms in the dictionary stay non-zero.)
+which allows only governing terms in the dictionary stay non-zero.
+-->
 
 
 
